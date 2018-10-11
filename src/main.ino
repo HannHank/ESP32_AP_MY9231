@@ -1,8 +1,8 @@
-
+//Including Libarys 
 #include <WiFi.h>
 #include "my9291.h"
 #include <stdlib.h>
-
+//define pins 
 #define MY9291_DI_PIN       13
 #define MY9291_DCKI_PIN     15
 #define RAINBOW_DELAY       10
@@ -22,9 +22,10 @@ my9291 _my9291 = my9291(MY9291_DI_PIN, MY9291_DCKI_PIN, MY9291_COMMAND_DEFAULT, 
 // WiFi references
 const char *ssid = "MyESP32AP";
 const char *passwd = "12345678";
+//The WifiServer Port 
 WiFiServer server(80);
 
-
+//The rainbow funktion
 void rainbow(unsigned char index) {
 
     if (index < 85) {
@@ -38,7 +39,7 @@ void rainbow(unsigned char index) {
     }
 
 }
-
+//The funktion witch loops the rainbow funktion
 void rainbow_loop(){
     static unsigned char count = 0;
     static unsigned long last = millis();
@@ -47,15 +48,15 @@ void rainbow_loop(){
         rainbow(count++);
     }
 }
-
+//set the LEDColor 
 void handleLEDColor(uint8_t r, uint8_t g, uint8_t b) {
     _my9291.setColor((my9291_color_t) { r, g, b, 0, 0 });
 }
-
+//gets the state off the pirSensor
 uint8_t getPIRState(void) {
     return HIGH == digitalRead(pirSensor) ? 1 : 0;
 }
-
+//handel the pirDedection
 void pirDetectLoop() {
     static unsigned long pirDetectTStart = millis();
     static unsigned long lightTStart;
@@ -97,9 +98,10 @@ void setup() {
     
     // PIR sendor 
     pinMode(pirSensor, INPUT);
-
+    
     WiFi.softAP(ssid, passwd);
     Serial.println(WiFi.softAPIP());
+    //start the Server on port 80
     server.begin();
 }
 
